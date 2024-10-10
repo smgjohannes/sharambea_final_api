@@ -1,0 +1,21 @@
+[
+  "20240619143221-create-user.js",
+  "20240619143654-create-token.js",
+  "20241003073100-add-role-to-users.js",
+  "20240620123709-create-useragent.js",
+  "20240722124822-create-property-table.js",
+  "20240722125054-create-bidding-table.js",
+  "20240722125751-create-interested_buyers-table.js",
+  "20240722125857-create-property_count-table.js",
+  "20240723090749-create-category.js",
+  "20240723091421-create-request.js",
+  "20240801094125-update-the-request-table.js",
+  "20240815090415-add-category-to-property-table.js",
+  "20240822102543-create-notifications.js",
+  "20240827103909-add-monthly-rates-levy-to-properties.js",
+  "20240828134457-add-seller-id-to-interested-buyers.js",
+  "20240902142623-add-date_of_moving_in-to-request-table.js",
+  "20240916092758-add-proof-of-payment-to-request-table.js",
+  "20240916110952-create-files-table.js",
+  "20240619143856-create-image.js"
+]
