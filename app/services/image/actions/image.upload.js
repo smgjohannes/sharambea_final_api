@@ -51,11 +51,10 @@ async function upload(req, entityModel, entityId, files) {
       const content = fs.readFileSync(`${__basedir}/uploads/${file.filename}`);
       fs.writeFileSync(imagePath, content);
 
-      // Detect if the request is https or http
-      const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-
       // Construct the image URL
-      const imageUrl = `${protocol}://${req.get('host')}/uploads/${folder}/${file.originalname}`;
+      const imageUrl = `${req.protocol}://${req.get(
+        'host'
+      )}/uploads/${folder}/${file.originalname}`;
 
       // Update the image URL and save it to the database
       image.url = imageUrl;
@@ -71,6 +70,5 @@ async function upload(req, entityModel, entityId, files) {
     throw new Error400('Error: could not upload images.');
   }
 }
-
 
 module.exports = { upload };
