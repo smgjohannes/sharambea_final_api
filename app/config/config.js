@@ -75,8 +75,32 @@ module.exports = {
     },
   },
 
+
+  // production: {
+  //   dialect: process.env.DATABASE_PROD_DIALECT,
+  //   username: process.env.DATABASE_PROD_USERNAME,
+  //   password: process.env.DATABASE_PROD_PASSWORD,
+  //   database: process.env.DATABASE_PROD_NAME,
+  //   host: process.env.DATABASE_PROD_HOST,
+  //   port: process.env.DATABASE_PROD_PORT,
+  //   logging: false,
+  //   define: {
+  //     underscored: true,
+  //     freezeTableName: true,
+  //     timestamps: true,
+  //     createdAt: 'created_at',
+  //     updatedAt: 'updated_at',
+  //     deletedAt: 'deleted_at',
+  //   },
+  //   retry: {
+  //     match: [/SQLITE_BUSY/],
+  //     name: 'query',
+  //     max: 5,
+  //   },
+  // },
+
   production: {
-    dialect: process.env.DATABASE_CLIENT,
+    dialect: process.env.DATABASE_DIALECT,
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,

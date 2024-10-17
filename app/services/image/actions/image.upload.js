@@ -1,5 +1,6 @@
 const fs = require('fs');
-const fse = require('fs-extra');
+const axios = require('axios');
+const FormData = require('form-data');
 const db = require('../../../models');
 const { BadParameters, NotFoundError } = require('../../../utils/coreErrors');
 const { Error400 } = require('../../../utils/httpErrors');
@@ -12,7 +13,7 @@ const { Error400 } = require('../../../utils/httpErrors');
  * const destroy = await app.image.upload({}, 'Post', '375223b3-71c6-4b61-a346-0a9d5baf12b4', [{}]);
  */
 async function upload(req, entityModel, entityId, files) {
-  console.log('Received files:', files);
+  // console.log('Received files:', files);
   if (files.length === 0) {
     throw new BadParameters(`No files provided.`);
   }
@@ -31,38 +32,34 @@ async function upload(req, entityModel, entityId, files) {
   }
 
   const folder = entity.name ? entity.name : 'images';
-  const uploadDir = `${__basedir}/uploads/${folder}`;
+
+   const form = new FormData();
+   form.append('action', 'upload'); 
+   form.append('folder', folder); 
 
   try {
-    // Ensure the directory exists
-    fse.mkdirsSync(uploadDir);
 
-    for (let file of files) {
-      const imagePath = `${uploadDir}/${file.originalname}`;
+    files.forEach(filePath => {
+      form.append('images[]', fs.createReadStream(filePath.path));
+    });
 
-      // Save image information to the database
-      const image = await entity.createImage({
-        type: file.mimetype,
-        name: file.originalname,
+    const response = await axios.post('https://files.sharambeaprop.com/uploader.php', form, {
+      headers: {
+        ...form.getHeaders(),
+      },
+    });
+
+    const images = response.data.files;
+console.log(images);
+    for (let file of images) {
+
+      await entity.createImage({
+        type: file.filetype,
+        name: file.filename,
         directory: folder,
+        url: file.fileurl,
       });
 
-      // Read and save the image file
-      const content = fs.readFileSync(`${__basedir}/uploads/${file.filename}`);
-      fs.writeFileSync(imagePath, content);
-
-      // Detect if the request is https or http
-      const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-
-      // Construct the image URL
-      const imageUrl = `${protocol}://${req.get('host')}/uploads/${folder}/${file.originalname}`;
-
-      // Update the image URL and save it to the database
-      image.url = imageUrl;
-      await image.save();
-
-      // Delete the temporary file
-      fs.unlinkSync(`${__basedir}/uploads/${file.filename}`);
     }
 
     return entity.reload();

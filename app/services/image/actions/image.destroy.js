@@ -1,4 +1,5 @@
 const fs = require('fs');
+const FormData = require('form-data');
 const db = require('../../../models');
 const { NotFoundError } = require('../../../utils/coreErrors');
 
@@ -18,14 +19,24 @@ async function destroy(id) {
 
   let deleted = false;
 
+  const form = new FormData();
+  form.append('action', 'delete'); 
+  form.append('folder', image.directory); 
+  form.append('filename', image.name);
+
   try {
     // delete image file
-    fs.unlinkSync(`${__basedir}/uploads/${image.directory}/${image.name}`);
-    deleted = true;
+    const response = await axios.post('http://files.sharambeaprop.com/upload.php', form, {
+      headers: {
+        ...form.getHeaders(),
+      },
+    });
     // delete model
     await image.destroy();
+    deleted = true;
   } catch (e) {
     deleted = false;
+    console.log(e);
   }
 
   return { deleted };
