@@ -30,6 +30,7 @@ function start(_App, port) {
 
   app.use(cors());
   app.options('*', cors());
+
   app.use('/public', express.static(path.join(__dirname, '../../public')));
   app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   app.use(helmet());
@@ -42,8 +43,13 @@ function start(_App, port) {
   app.use(compression());
 
   app.enable('trust proxy');
+  
   app.set('trust proxy', '127.0.0.1');
   app.use(errorMiddleware);
+  app.use(function (req, res, next) {
+    res.setHeader('Content-Security-Policy', "img-src 'self' https://admin.sharambeaprop.com", "img-src 'self' https://sharambeaprop.com", "img-src 'self' https://files.sharambeaprop.com",);
+    return next();
+  });
   // loading app
   app.use('/api/v1', API(_App));
   app.use('/api', notFoundMiddleware);
