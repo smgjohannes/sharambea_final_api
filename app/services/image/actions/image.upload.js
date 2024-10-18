@@ -5,7 +5,7 @@ const db = require('../../../models');
 const { BadParameters, NotFoundError } = require('../../../utils/coreErrors');
 const { Error400 } = require('../../../utils/httpErrors');
 
-/**
+/** 
  * @description Upload images
  * @param {Array} id - image id.
  * @returns {Promise} Return the created images.

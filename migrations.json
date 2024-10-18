@@ -1,7 +1,7 @@
 [
   "20240619143221-create-user.js",
   "20240619143654-create-token.js",
-  "20241003073100-add-role-to-users.js",
+  "20240619143856-create-image.js",
   "20240620123709-create-useragent.js",
   "20240722124822-create-property-table.js",
   "20240722125054-create-bidding-table.js",
@@ -17,5 +17,5 @@
   "20240902142623-add-date_of_moving_in-to-request-table.js",
   "20240916092758-add-proof-of-payment-to-request-table.js",
   "20240916110952-create-files-table.js",
-  "20240619143856-create-image.js"
+  "20241003073100-add-role-to-users.js"
 ]
