@@ -185,7 +185,7 @@ function getRoutes(app) {
     )
     .delete(authMiddleware, propertyController.destroy);
     router.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../public_html/index.html'));
+      res.sendFile(path.join(__dirname, 'https://sharambeaprop.com'));
     });
   
 
