@@ -1,5 +1,5 @@
 const express = require('express');
-
+const path = require('path');
 const UserController = require('./controllers/userController');
 const MemberController = require('./controllers/memberController');
 const PaymentController = require('./controllers/paymentController');
@@ -162,6 +162,7 @@ function getRoutes(app) {
     );
 
   // PROPERTY ROUTES
+
   router.route('/properties/all').get(propertyController.getAll);
 
   router
@@ -184,9 +185,11 @@ function getRoutes(app) {
       propertyController.update
     )
     .delete(authMiddleware, propertyController.destroy);
-    router.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'https://sharambeaprop.com'));
-    });
+// Serve static files from the public_html directory
+router.use(express.static(path.join(__dirname, 'public_html'))); // Correct usage of express.static
+router.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public_html', 'index.html'));
+});
   
 
   // properties ROUTES
