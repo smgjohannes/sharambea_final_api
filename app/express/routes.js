@@ -184,6 +184,10 @@ function getRoutes(app) {
       propertyController.update
     )
     .delete(authMiddleware, propertyController.destroy);
+    router.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../public_html/index.html'));
+    });
+  
 
   // properties ROUTES
   router.get('/properties/stats', authMiddleware, propertyController.stats);

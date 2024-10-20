@@ -23,7 +23,7 @@ const DEFAULT_OPTIONS = {
     'toilets',
     'dining_rooms',
     'sitting_rooms',
-    'land_size',
+    'land_size', 
     'outside_building',
     'flatlet',
     'price',
