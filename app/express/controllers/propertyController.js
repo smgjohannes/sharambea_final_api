@@ -1,4 +1,6 @@
-const asyncMiddleware = require('../middleware/asyncMiddleware');
+const { json } = require("sequelize");
+const { getRegions } = require("../../services/property/property.getRegions");
+const asyncMiddleware = require("../middleware/asyncMiddleware");
 
 module.exports = function propertyController(app) {
   /**
@@ -8,7 +10,7 @@ module.exports = function propertyController(app) {
    *
    */
   async function getAll(req, res) {
-    const response = await app.properties.getAll(req.query);
+    const response = await app.properties.getAll(req);
     res.json(response);
   }
 
@@ -19,10 +21,19 @@ module.exports = function propertyController(app) {
    *
    */
   async function get(req, res) {
-    const response = await app.properties.get(req.query, req);
+    const response = await app.properties.get(req, req);
     res.json(response);
   }
-
+  /**
+   * @api {get} /api/v1/properties/regions
+   * @apiName getRegions
+   * @apiGroup Property
+   *
+   */
+  async function getRegions(req, res) {
+    const regions = await app.properties.getRegions(); // Call the getRegions service
+    res.json(regions);
+  }
   /**
    * @api {post} /api/v1/properties
    * @apiName create
@@ -96,6 +107,7 @@ module.exports = function propertyController(app) {
     update: asyncMiddleware(update),
     getById: asyncMiddleware(getById),
     stats: asyncMiddleware(stats),
+    getRegions: asyncMiddleware(getRegions),
     destroy: asyncMiddleware(destroy),
   });
 };

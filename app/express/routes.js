@@ -1,31 +1,31 @@
-const express = require('express');
-const path = require('path');
-const UserController = require('./controllers/userController');
-const MemberController = require('./controllers/memberController');
-const PaymentController = require('./controllers/paymentController');
-const EmailController = require('./controllers/emailController');
-const ImageController = require('./controllers/imageController');
-const RequestController = require('./controllers/requestController');
-const PropertyController = require('./controllers/propertyController');
-const InterestedBuyerController = require('./controllers/interesterdBuyerContoller');
-const NotificationController = require('./controllers/notificationController');
+const express = require("express");
+const path = require("path");
+const UserController = require("./controllers/userController");
+const MemberController = require("./controllers/memberController");
+const PaymentController = require("./controllers/paymentController");
+const EmailController = require("./controllers/emailController");
+const ImageController = require("./controllers/imageController");
+const RequestController = require("./controllers/requestController");
+const PropertyController = require("./controllers/propertyController");
+const InterestedBuyerController = require("./controllers/interesterdBuyerContoller");
+const NotificationController = require("./controllers/notificationController");
 
 // validators
-const userValidation = require('./validations/userValidation');
-const memberValidation = require('./validations/memberValidation');
-const paymentValidation = require('./validations/paymentValidation');
-const mailValidation = require('./validations/mailValidation');
-const propertyValidation = require('./validations/propertyValidation');
-const requestValidator = require('./validations/requestValidation ');
+const userValidation = require("./validations/userValidation");
+const memberValidation = require("./validations/memberValidation");
+const paymentValidation = require("./validations/paymentValidation");
+const mailValidation = require("./validations/mailValidation");
+const propertyValidation = require("./validations/propertyValidation");
+const requestValidator = require("./validations/requestValidation ");
 
-const AuthMiddleware = require('./middleware/authMiddleware');
-const CorsMiddleware = require('./middleware/corsMiddleware');
+const AuthMiddleware = require("./middleware/authMiddleware");
+const CorsMiddleware = require("./middleware/corsMiddleware");
 
 // Simple middleware
-const adminMiddleware = require('./middleware/adminMiddleware');
-const rateLimitMiddleware = require('./middleware/rateLimitMiddleware');
+const adminMiddleware = require("./middleware/adminMiddleware");
+const rateLimitMiddleware = require("./middleware/rateLimitMiddleware");
 
-const upload = require('../utils/multer');
+const upload = require("../utils/multer");
 
 function getRoutes(app) {
   const userController = UserController(app);
@@ -43,20 +43,20 @@ function getRoutes(app) {
   // enable cross-origin requests
   router.use(CorsMiddleware);
 
-  const authMiddleware = AuthMiddleware('post:write', app);
+  const authMiddleware = AuthMiddleware("post:write", app);
 
   // EMAIL
-  router.post('/email/send', mailValidation.sendSchema, emailController.send);
+  router.post("/email/send", mailValidation.sendSchema, emailController.send);
 
   // AUTH
   router.post(
-    '/login',
+    "/login",
     rateLimitMiddleware,
     userValidation.loginSchema,
     userController.login
   );
   router
-    .route('/users/:id')
+    .route("/users/:id")
     .get(userController.getById)
     .patch(
       authMiddleware,
@@ -67,7 +67,7 @@ function getRoutes(app) {
 
   // MEMBERS
   router
-    .route('/members')
+    .route("/members")
     .get(memberController.get)
     .post(
       authMiddleware,
@@ -77,7 +77,7 @@ function getRoutes(app) {
     );
 
   router
-    .route('/members/:id')
+    .route("/members/:id")
     .get(memberController.getById)
     .patch(
       authMiddleware,
@@ -88,33 +88,33 @@ function getRoutes(app) {
     .delete(authMiddleware, memberController.destroy);
 
   // REQUESTS
-  router.route('/requests').get(requestController.get).post(
+  router.route("/requests").get(requestController.get).post(
     upload.manyFiles(),
 
     requestController.create
   );
 
   router
-    .route('/requests/:id')
+    .route("/requests/:id")
     .get(requestController.getById)
     .patch(authMiddleware, upload.manyFiles(), requestController.update)
     .delete(authMiddleware, requestController.destroy);
 
   // IMAGE ROUTES
   router.post(
-    '/images/:entity_id',
+    "/images/:entity_id",
     authMiddleware,
     upload.manyFiles(),
     imageController.upload
   );
 
-  router.delete('/images/:id', authMiddleware, imageController.destroy);
+  router.delete("/images/:id", authMiddleware, imageController.destroy);
 
   // PAYMENTS
-  router.get('/payments/stats', authMiddleware, paymentController.stats);
+  router.get("/payments/stats", authMiddleware, paymentController.stats);
 
   router
-    .route('/payments')
+    .route("/payments")
     .get(paymentController.get)
     .post(
       authMiddleware,
@@ -123,7 +123,7 @@ function getRoutes(app) {
     );
 
   router
-    .route('/payments/:id')
+    .route("/payments/:id")
     .get(paymentController.getById)
     .patch(
       authMiddleware,
@@ -133,9 +133,9 @@ function getRoutes(app) {
     .delete(authMiddleware, paymentController.destroy);
 
   // USERS
-  router.get('/users', authMiddleware, adminMiddleware, userController.get);
+  router.get("/users", authMiddleware, adminMiddleware, userController.get);
   router
-    .route('/users/:id')
+    .route("/users/:id")
     .get(authMiddleware, adminMiddleware, userController.getById)
     .patch(
       authMiddleware,
@@ -146,14 +146,14 @@ function getRoutes(app) {
 
   // CURRENT USER
   router.post(
-    '/me/update-password',
+    "/me/update-password",
     authMiddleware,
     userValidation.updatePasswordSchema,
     userController.updatePassword
   );
 
   router
-    .route('/me')
+    .route("/me")
     .get(authMiddleware, userController.getMe)
     .patch(
       authMiddleware,
@@ -163,10 +163,10 @@ function getRoutes(app) {
 
   // PROPERTY ROUTES
 
-  router.route('/properties/all').get(propertyController.getAll);
-
+  router.route("/properties/all").get(propertyController.getAll);
+  router.route("/properties/regions").get(propertyController.getRegions);
   router
-    .route('/properties')
+    .route("/properties")
     .get(authMiddleware, propertyController.get)
     .post(
       authMiddleware,
@@ -176,7 +176,7 @@ function getRoutes(app) {
     );
 
   router
-    .route('/properties/:propertyId')
+    .route("/properties/:propertyId")
     .get(propertyController.getById)
     .patch(
       authMiddleware,
@@ -185,35 +185,34 @@ function getRoutes(app) {
       propertyController.update
     )
     .delete(authMiddleware, propertyController.destroy);
-// Serve static files from the public_html directory
-router.use(express.static(path.join(__dirname, 'public_html'))); // Correct usage of express.static
-router.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public_html', 'index.html'));
-});
-  
+  // Serve static files from the public_html directory
+  router.use(express.static(path.join(__dirname, "public_html"))); // Correct usage of express.static
+  router.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public_html", "index.html"));
+  });
 
   // properties ROUTES
-  router.get('/properties/stats', authMiddleware, propertyController.stats);
+  router.get("/properties/stats", authMiddleware, propertyController.stats);
 
   // InterestedBuyers ROUTES
   router
-    .route('/properties/:propertyId/interestedBuyer')
+    .route("/properties/:propertyId/interestedBuyer")
     .get(authMiddleware, interestedBuyerController.get)
     .post(interestedBuyerController.create);
 
   router
-    .route('/properties/:propertyId/interestedBuyer/:id')
+    .route("/properties/:propertyId/interestedBuyer/:id")
     .get(authMiddleware, interestedBuyerController.getById)
     .delete(authMiddleware, interestedBuyerController.destroy);
 
   // NOTIFICATIONS ROUTES
   router
-    .route('/notifications')
+    .route("/notifications")
     .get(authMiddleware, notificationController.get)
     .post(authMiddleware, notificationController.create);
 
   router
-    .route('/notifications/:id')
+    .route("/notifications/:id")
     .patch(authMiddleware, notificationController.update)
     .delete(authMiddleware, notificationController.destroy);
 

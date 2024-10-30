@@ -103,7 +103,7 @@ function start(_App, port) {
 
   // CORS configuration
   const corsOptions = {
-    origin: ['https://admin.sharambeaprop.com','https://sharambeaprop.com','https://files.sharambeaprop.com','http://localhost:3000'], // Add your frontend origin here
+    origin: ['https://admin.sharambeaprop.com','https://sharambeaprop.com','https://files.sharambeaprop.com','http://localhost:3000','http://localhost:3001'], // Add your frontend origin here
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Specify allowed methods
     credentials: true, // If you're sending cookies or using credentials
     optionsSuccessStatus: 200, // For legacy browser support

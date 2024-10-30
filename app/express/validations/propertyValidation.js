@@ -30,7 +30,7 @@ exports.createSchema = (req, res, next) => {
       .optional(),
     image: Joi.any().optional(),
     additionalImages: Joi.any().optional(),
-    property_type: Joi.string().valid('rent', 'buy', 'sell').required(),
+    property_type: Joi.string().valid('rent', 'buy', 'sale').required(),
     house_number: Joi.string().optional().allow(null, ''),
     street_name: Joi.string().optional().allow(null, ''),
     suburb: Joi.string().optional().allow(null, ''),
@@ -43,7 +43,7 @@ exports.createSchema = (req, res, next) => {
       .falsy('0')
       .optional(),
     kitchenette: Joi.boolean()
-      .truthy('true')
+      .truthy('true') 
       .truthy('1')
       .falsy('false')
       .falsy('0')
