@@ -1,8 +1,8 @@
-const nodemailer = require('nodemailer');
-const pug = require('pug');
-const htmlToText = require('html-to-text');
-const path = require('path');
-const sgTransport = require('nodemailer-sendgrid-transport');
+const nodemailer = require("nodemailer");
+const pug = require("pug");
+const htmlToText = require("html-to-text");
+const path = require("path");
+const sgTransport = require("nodemailer-sendgrid-transport");
 
 /**
  * sendEmail
@@ -13,27 +13,37 @@ module.exports = class Email {
    * @param {string} subject
    * @param {string} message
    */
-  constructor(toEmail, subject, message, data = null, attachments = []) {
+  constructor(
+    toEmail,
+    subject,
+    message,
+    data = null,
+    attachments = [],
+    cc = null
+  ) {
     this.to = toEmail;
     this.name = data.name ? data.name : toEmail;
     this.subject = `${subject} - sharambea properties`;
     this.message = message;
-    this.url = data.url ?? 'https://sharambeaprop.com/';
+    this.url = data.url ?? "https://sharambeaprop.com/";
     this.from = `sharambeaproperties - ${process.env.EMAIL_FROM}`;
     this.data = data;
     this.attachments = attachments;
+    this.cc = cc;
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
-      // SendGrid
-      return nodemailer.createTransport(
-        sgTransport({
-          auth: {
-            api_key: process.env.SENDGRID_API_KEY,
-          },
-        })
-      );
+    if (process.env.NODE_ENV === "production") {
+      return nodemailer.createTransport({
+        service: "Gmail",
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
     }
 
     return nodemailer.createTransport({
@@ -76,6 +86,7 @@ module.exports = class Email {
       html,
       text: htmlToText.htmlToText(html),
       attachments: this.attachments ? this.attachments : null,
+      cc: this.cc,
     };
 
     // 3) Create a transport and send email
@@ -92,25 +103,25 @@ module.exports = class Email {
 
   // WELCOME
   async sendWelcome() {
-    await this.send('welcome');
+    await this.send("welcome");
   }
 
   // RESET PASSWORD
   async sendPasswordReset() {
-    await this.send('passwordReset');
+    await this.send("passwordReset");
   }
 
   // PASSWORD CHANGED
   async sendPasswordChanged() {
-    await this.send('passwordChanged');
+    await this.send("passwordChanged");
   }
 
   // ACCOUNT CONFIRMATION
   async sendActivation() {
-    await this.send('activation');
+    await this.send("activation");
   }
 
   async sendLoginActivity() {
-    await this.send('loginActivity');
+    await this.send("loginActivity");
   }
 };

@@ -1,5 +1,5 @@
-const asyncMiddleware = require('../middleware/asyncMiddleware');
-const Email = require('../../utils/email');
+const asyncMiddleware = require("../middleware/asyncMiddleware");
+const Email = require("../../utils/email");
 
 module.exports = function EmainController(app) {
   /**
@@ -9,20 +9,27 @@ module.exports = function EmainController(app) {
    *
    */
   async function send(req, res) {
-    const { from_name, from_email, subject, message } = req.body;
-    const toEmail = 'sharambe@sharambeaprop.com';
-    const toName = 'chelsea';
+    try {
+      const { from_name, from_email, subject, message, to_email, to_name } =
+        req.body;
+      const toEmail = to_email ?? "sharambe@sharambeaprop.com";
+      const toName = to_name ?? "chelsea";
 
-    const response = await new Email(
-      toEmail,
-      `${subject} <${from_email} ${from_name}>`,
-      message,
-      {
-        name: toName,
-      }
-    ).sendEmail('default');
+      await new Email(
+        toEmail,
+        `${subject} <${from_email} ${from_name}>`,
+        message,
+        {
+          name: toName,
+        },
+        null,
+        "sharambe@sharambeaprop.com, nangy@sharambeaprop.com"
+      ).sendEmail("default");
 
-    res.json(response);
+      res.json({ message: "Message successfully" });
+    } catch (error) {
+      res.status(400).json({ message: "Could not send message" });
+    }
   }
 
   return Object.freeze({
