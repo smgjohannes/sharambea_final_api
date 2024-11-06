@@ -1,11 +1,11 @@
-const fs = require('fs');
-const axios = require('axios');
-const FormData = require('form-data');
-const db = require('../../../models');
-const { BadParameters, NotFoundError } = require('../../../utils/coreErrors');
-const { Error400 } = require('../../../utils/httpErrors');
+const fs = require("fs");
+const axios = require("axios");
+const FormData = require("form-data");
+const db = require("../../../models");
+const { BadParameters, NotFoundError } = require("../../../utils/coreErrors");
+const { Error400 } = require("../../../utils/httpErrors");
 
-/** 
+/**
  * @description Upload images
  * @param {Array} id - image id.
  * @returns {Promise} Return the created images.
@@ -22,7 +22,14 @@ async function upload(req, entityModel, entityId, files) {
     include: [
       {
         model: db.Image,
-        attributes: ['id', 'name', 'url', 'type', 'directory'],
+        attributes: [
+          "id",
+          "name",
+          "url",
+          "type",
+          "directory",
+          "imageable_type",
+        ],
       },
     ],
   });
@@ -31,43 +38,44 @@ async function upload(req, entityModel, entityId, files) {
     throw new NotFoundError(`${entityModel} not found..`);
   }
 
-  const folder = entity.name ? entity.name : 'images';
+  const folder = entity.name ? entity.name : "images";
 
-   const form = new FormData();
-   form.append('action', 'upload'); 
-   form.append('folder', folder); 
+  const form = new FormData();
+  form.append("action", "upload");
+  form.append("folder", folder);
 
   try {
-
-    files.forEach(filePath => {
-      form.append('images[]', fs.createReadStream(filePath.path));
+    files.forEach((filePath) => {
+      form.append("images[]", fs.createReadStream(filePath.path));
     });
 
-    const response = await axios.post('https://files.sharambeaprop.com/uploader.php', form, {
-      headers: {
-        ...form.getHeaders(),
-      },
-    });
+    const response = await axios.post(
+      "https://files.sharambeaprop.com/uploader.php",
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+        },
+      }
+    );
 
     const images = response.data.files;
-console.log(images);
+    console.log(images);
     for (let file of images) {
-
       await entity.createImage({
         type: file.filetype,
         name: file.filename,
         directory: folder,
         url: file.fileurl,
+        imageable_id: entity.id,
+        imageable_type: entityModel,
       });
-
     }
-
-    return entity.reload();
+    return images;
   } catch (error) {
     console.error(error);
-    throw new Error400('Error: could not upload images.');
+    throw new Error400("Error: could not upload images.");
   }
 }
-
 
 module.exports = { upload };

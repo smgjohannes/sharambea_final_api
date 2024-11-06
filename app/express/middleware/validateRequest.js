@@ -1,4 +1,4 @@
-const { Error422 } = require('../../utils/httpErrors');
+const { Error422 } = require("../../utils/httpErrors");
 
 /**
  *
@@ -15,7 +15,7 @@ module.exports = function validateRequest(req, next, schema) {
   };
   const { error, value } = schema.validate(req.body, options);
   if (error) {
-    next(new Error422(error.details.map((x) => x.message).join(', ')));
+    next(new Error422(error.details.map((x) => x.message).join(", ")));
   } else {
     req.body = value;
     next();

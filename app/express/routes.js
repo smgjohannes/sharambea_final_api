@@ -185,11 +185,6 @@ function getRoutes(app) {
       propertyController.update
     )
     .delete(authMiddleware, propertyController.destroy);
-  // Serve static files from the public_html directory
-  router.use(express.static(path.join(__dirname, "public_html"))); // Correct usage of express.static
-  router.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public_html", "index.html"));
-  });
 
   // properties ROUTES
   router.get("/properties/stats", authMiddleware, propertyController.stats);
