@@ -1,8 +1,8 @@
-const fs = require('fs');
-const axios = require('axios');
-const FormData = require('form-data');
-const db = require('../../../models');
-const { NotFoundError } = require('../../../utils/coreErrors');
+const fs = require("fs");
+const axios = require("axios");
+const FormData = require("form-data");
+const db = require("../../../models");
+const { NotFoundError } = require("../../../utils/coreErrors");
 
 /**
  * @description Destroy a image
@@ -15,23 +15,27 @@ async function destroy(id) {
   const image = await db.Image.findByPk(id);
 
   if (image === null) {
-    throw new NotFoundError('Image not found');
+    throw new NotFoundError("Image not found");
   }
 
   let deleted = false;
 
   const form = new FormData();
-  form.append('action', 'delete'); 
-  form.append('folder', image.directory); 
-  form.append('filename', image.name);
+  form.append("action", "delete");
+  form.append("folder", image.directory);
+  form.append("filename", image.name);
 
   try {
     // delete image file
-    const response = await axios.post('http://files.sharambeaprop.com/upload.php', form, {
-      headers: {
-        ...form.getHeaders(),
-      },
-    });
+    const response = await axios.post(
+      "https://files.sharambeaprop.com/uploader.php",
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+        },
+      }
+    );
     // delete model
     await image.destroy();
     deleted = true;
